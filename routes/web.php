@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LabelController;
+use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,10 +28,42 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware('auth', 'verified')->group(function () {
+
+    Route::middleware('role:1')
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::view('dashboard', 'admin.index');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::resource('category', CategoryController::class);
+            Route::resource('label', LabelController::class);
+            Route::resource('status', StatusController::class);
+            Route::resource('priority', PriorityController::class);
+            Route::resource('user', UserController::class);
+        });
+
+    Route::middleware('role:2')
+        ->prefix('agent')
+        ->name('agent.')
+        ->group(function () {
+            Route::view('dashboard', 'admin.index')->name('dashboard');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
+
+
+    Route::middleware('role:3')
+        ->prefix('customer')
+        ->name('customer.')
+        ->group(function () {
+            Route::view('dashboard', 'admin.index')->name('dashboard');
+            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

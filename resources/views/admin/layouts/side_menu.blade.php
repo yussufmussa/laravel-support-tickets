@@ -137,17 +137,20 @@
           
           
           
-          <li class="nav-header">EXAMPLES</li>
           <li class="nav-item">
-            <a href="pages/calendar.html" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Calendar
-                <span class="badge badge-info right">2</span>
+              <i class="nav-icon fas fa-th"></i>
+              <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                <p>
+                Logout
               </p>
-            </a>
+                            </x-dropdown-link>
+                        </form>
           </li>
-          
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
