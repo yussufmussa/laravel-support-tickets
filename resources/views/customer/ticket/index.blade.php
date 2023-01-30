@@ -30,9 +30,9 @@
        @endif
         <div class="card card-default">
             <div class="card-header">
-                <h3 class="card-title">user List</h3>
+                <h3 class="card-title">Ticket List</h3>
                 <div class="card-tools">
-                  <a href="{{route('admin.user.create')}}" class="btn btn-primary">New user</a>
+                  <a href="{{route('admin.ticket.create')}}" class="btn btn-primary">New Ticket</a>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -42,32 +42,28 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                     <tbody>
-                        @foreach($users as $key => $user)
+                        @foreach($categories as $key => $label)
                         <tr>
                             <td>{{$key + 1}}</td>
-                            <td>{{$user->name}}</td>
-                            <td>{{$user->email}}</td>
-                            <td>{{$user->role->name}}</td>
+                            <td>{{$label->name}}</td>
                             <td>
-                                <a href="{{route('admin.user.edit', $user->id)}}"><i class="fa fa-pen-alt"></i></a>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#user{{$user->id}}">
+                                <a href="{{route('admin.label.edit', $label->id)}}"><i class="fa fa-pen-alt"></i></a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#label{{$label->id}}">
                                     <i class="fa fa-trash"></i>
                                 </button>
 
                                 <!--  -->
-                                <div class="modal fade" id="user{{$user->id}}">
+                                <div class="modal fade" id="label{{$label->id}}">
                                     <div class="modal-dialog">
-                                        <form action="{{route('admin.user.destroy', $user->id)}}" method="post">@csrf
+                                        <form action="{{route('admin.label.destroy', $label->id)}}" method="post">@csrf
                                             {{method_field('DELETE')}}
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title">Alert</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-user="Close">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>

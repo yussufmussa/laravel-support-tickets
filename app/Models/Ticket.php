@@ -5,13 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Label extends Model
+class Ticket extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $guarded = [];
 
-    public function ticket(){
+    public function category(){
         return $this->belongsToMany(Category::class)
+            ->withTimestamps();
+    }
+
+    public function label(){
+        return $this->belongsToMany(Label::class)
         ->withTimestamps();
     }
 }

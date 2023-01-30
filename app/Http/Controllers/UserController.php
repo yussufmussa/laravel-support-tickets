@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -27,6 +28,7 @@ class UserController extends Controller
     public function create()
     {
         //
+        return view('admin.user.create');
     }
 
     /**
@@ -37,7 +39,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //thise will create user with agent role by default
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required'
+        ]);
+
+        $user = new User();
+        $user->name =$request->name;
+        $user->email = $request->email;
+        $user->role_id = 2; // agent as role
+        $user->password = Hash::make($request->password);
+        $user->email_verified_at = now(); //verify user
+        $save = $user->save();
+
+        if($save){
+            return redirect()->route('admin.user.index')->with('message', 'User created');
+        }
     }
 
     /**
@@ -60,6 +79,8 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+        $user = User::findorfail($id);
+        return view('admin.user.edit', compact('user'));
     }
 
     /**
@@ -72,6 +93,24 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = User::findorfail($id);
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password
+
+        ];
+        $update = $user->update($data);
+
+        return redirect()->route('admin.user.inde')->with('message', 'User updated');
+
     }
 
     /**
@@ -83,5 +122,14 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::findorfail($id);
+        //cannot delate admin
+        if($user->role_id == 1){
+           abort(403);
+        }
+        $delete = $user->delete();
+        if($delete){
+            return back()->with('message', 'User Deleted');
+        }
     }
 }

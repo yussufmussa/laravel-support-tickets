@@ -5,6 +5,7 @@ use App\Http\Controllers\LabelController;
 use App\Http\Controllers\PriorityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,13 +29,13 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::middleware('auth', 'verified')->group(function () {
+Route::middleware('auth')->group(function () {
 
     Route::middleware('role:1')
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::view('dashboard', 'admin.index');
+            Route::view('dashboard', 'admin.index')->name('dashboard');
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::resource('category', CategoryController::class);
@@ -59,10 +60,11 @@ Route::middleware('auth', 'verified')->group(function () {
         ->prefix('customer')
         ->name('customer.')
         ->group(function () {
-            Route::view('dashboard', 'admin.index')->name('dashboard');
+            Route::view('dashboard', 'customer.index')->name('dashboard');
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+            Route::resource('ticket', TicketController::class);
         });
 });
 
