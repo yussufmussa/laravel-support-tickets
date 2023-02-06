@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Label;
+use App\Models\Priority;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
@@ -15,6 +19,16 @@ class TicketController extends Controller
     public function index()
     {
         //
+        // $tickets = DB::table('tickets')
+        // ->join('category_ticket', 'category_ticket.ticket_id', '=', 'tickets.id')
+        // ->join('label_ticket', 'label_ticket.ticket_id', '=', 'tickets.id')
+        // ->join('categories', 'categories.id', '=', 'category_ticket.category_id')
+        // ->select('tickets.*', 'category_ticket.*', 'label_ticket.*', 'categories.name')
+        // ->get();
+        // //dd($tickets);
+       
+        $tickets = Ticket::all();
+        return view('customer.ticket.index', compact('tickets'));
     }
 
     /**
@@ -25,7 +39,10 @@ class TicketController extends Controller
     public function create()
     {
         //
-        return view('customer.ticket.create');
+        $labels = Label::all();
+        $categories = Category::all();
+        $priorities = Priority::all();
+        return view('customer.ticket.create', compact('labels', 'categories', 'priorities'));
     }
 
     /**
@@ -41,32 +58,45 @@ class TicketController extends Controller
             'title' => 'required',
             'description' => 'required',
             'priority' => 'required',
-            'status' => 'required',
-            'category_id' => 'requiured',
+            'category_id' => 'required',
             'label_id' => 'required',
             'attachements' => 'mimes:jpg,png|max:2048',
             ], 
         [
-        'category_id' => 'select category',
-        'label_id' => 'select label']);
+        'category_id.required' => 'select category',
+        'label_id.required' => 'select label']);
 
         $ticket = new Ticket();
         $ticket->title = $request->title;
         $ticket->description = $request->description;
-        $ticket->priority = $request->prority;
+        $ticket->priority = $request->priority;
         $ticket->status = $request->status;
+        $ticket->user_id = $request->user_id;
+
         if($request->hasFile('attachements')){
             $fileName = time(). '.'.$request->attachements->extension();
-         $ticket->attachements = $fileName;
+           $ticket->attachements = $fileName;
+           $request->attachements->move(public_path('attachements'), $fileName);
         }
         $saveTicket = $ticket->save();
+
         if($saveTicket){
-            $request->attachements->move(public_path('attachements'), $fileName);
-            $lastTicketId = $ticket->id;
-            $lastTicketId->category()->attach($request->category_id);
-            $lastTicketId->category()->attach($request->category_id);
+            $getLastTicket = Ticket::find($ticket->id);
+
+            foreach($request->category_id as $category_id){
+                $getLastTicket->category()->attach($category_id);
+
+            }
+
+            foreach($request->label_id as $label_id){
+                $getLastTicket->label()->attach($label_id);
+
+            }
+        
             
         }
+
+        return redirect()->route('customer.ticket.index')->with('message', 'Ticket Submited');
 
 
 

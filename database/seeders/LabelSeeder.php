@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
+use App\Models\Label;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class CategorySeeder extends Seeder
+class LabelSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,8 +16,8 @@ class CategorySeeder extends Seeder
     public function run()
     {
         //
-        Category::create(['name' => 'Uncategorized']);
-        Category::create(['name' => 'Billing/Payments']);
-        Category::create(['name' => 'Technical Question']);
+        Label::create(['name' => 'bug']);
+        Label::create(['name' => 'question']);
+        Label::create(['name' => 'enhancement']);
     }
 }

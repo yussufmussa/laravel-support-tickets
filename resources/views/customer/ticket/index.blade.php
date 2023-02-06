@@ -1,4 +1,4 @@
-@extends('admin.layouts.base')
+@extends('customer.layouts.base')
 @section('extra_css')
 @section('contents')
 
@@ -32,7 +32,7 @@
             <div class="card-header">
                 <h3 class="card-title">Ticket List</h3>
                 <div class="card-tools">
-                  <a href="{{route('admin.ticket.create')}}" class="btn btn-primary">New Ticket</a>
+                  <a href="{{route('customer.ticket.create')}}" class="btn btn-primary">New Ticket</a>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -41,29 +41,38 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Action</th>
+                            <th>Ticket Title</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            
                         </tr>
                     <tbody>
-                        @foreach($categories as $key => $label)
+                        @foreach($tickets as $key => $ticket)
                         <tr>
                             <td>{{$key + 1}}</td>
-                            <td>{{$label->name}}</td>
+                            <td>{{$ticket->title}}</td>
+                            
+                            <td></td>
+                           
+                            
+                            <td>{{$ticket->priority}}</td>
+                            <td>{{$ticket->status}}</td>
                             <td>
-                                <a href="{{route('admin.label.edit', $label->id)}}"><i class="fa fa-pen-alt"></i></a>
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#label{{$label->id}}">
+                                <a href="{{route('customer.ticket.edit', $ticket->id)}}"><i class="fa fa-pen-alt"></i></a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ticket{{$ticket->id}}">
                                     <i class="fa fa-trash"></i>
                                 </button>
 
                                 <!--  -->
-                                <div class="modal fade" id="label{{$label->id}}">
+                                <div class="modal fade" id="ticket{{$ticket->id}}">
                                     <div class="modal-dialog">
-                                        <form action="{{route('admin.label.destroy', $label->id)}}" method="post">@csrf
+                                        <form action="{{route('customer.ticket.destroy', $ticket->id)}}" method="post">@csrf
                                             {{method_field('DELETE')}}
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4 class="modal-title">Alert</h4>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-ticket="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>

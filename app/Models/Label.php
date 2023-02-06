@@ -11,7 +11,7 @@ class Label extends Model
     protected $fillable = ['name'];
 
     public function ticket(){
-        return $this->belongsToMany(Category::class)
+        return $this->belongsToMany(Ticket::class)
         ->withTimestamps();
     }
 }

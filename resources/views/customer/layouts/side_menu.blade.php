@@ -27,26 +27,27 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
         <li class="nav-item">
-          <a href="{{route('customer.tickets.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Tickets
-                <span class="right badge badge-danger">4</span>
-              </p>
-            </a>
-          </li>
+          <a href="{{route('customer.ticket.index')}}" class="nav-link">
+            <i class="nav-icon fas fa-th"></i>
+            <p>
+              Tickets List
+              <span class="right badge badge-danger"></span>
+            </p>
+          </a>
+        </li>
+
+
+        <li class="nav-item">
+          <form action="{{route('logout')}}" method="post">@csrf
+        <button type="submit" class="nav-link">
+            <i class="nav-icon fas fa-exit"></i>
+            <p>
+              Log out
+              <span class="right badge badge-danger"></span>
+            </p>
+</button>
+        </form>
           
-          
-          <li class="nav-item">
-              <i class="nav-icon fas fa-th"></i>
-               Logout
-              <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-             
-            </x-dropdown-link>
-            </form>
         </li>
       </ul>
     </nav>

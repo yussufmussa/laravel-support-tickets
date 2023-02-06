@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        //
-        Schema::create('category_label', function (Blueprint $table) {
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade')->onUpdate('cascade')->nullable();
-            $table->foreignId('label_id')->constrained('labels')->onDelete('cascade')->onUpdate('cascade')->nullable();
+        Schema::create('category_ticket', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('ticket_id')->constrained('tickets')->onDelete('cascade')->onUpdate('cascade');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('category_ticket');
     }
 };
